@@ -117,4 +117,24 @@ router.get('/users/:id',async(req,res)=>{
     return res.send(userOrders)
 })
 
+router.get('/get/count',async(req,res)=>{
+    const orderCount = await Order.countDocuments((count)=>count)
+    if(!orderCount){
+        return res.status(500).json({success :false})
+    }
+    return res.status(200).json({
+        count : orderCount
+    })  
+})
+
+router.get('/get/userorders/:id',async (req,res)=>{
+    const userorderList = await Order.find({user : req.params.id})
+    .populate({ path : 'orderItems' , populate : {path : 'product' , populate : 'category'}})
+    .sort({'dateOrdered' : -1})
+    if(!userorderList){
+        return res.status(500).json({success : false})
+    }
+    return res.json(userorderList)
+})
+
 module.exports = router
