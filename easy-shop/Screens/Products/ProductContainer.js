@@ -3,6 +3,7 @@ import {View , StyleSheet, ActivityIndicator , FlatList, Dimensions} from 'react
 import { Container, Text , Header, Icon , Item, Input} from 'native-base';
 import ProductList from './ProductList'
 import SearchedProduct from './SearchedProduct'
+import Banner from '../../Shared/Banner'
 
 const data = require('../../assets/data/products.json')
 var { height } = Dimensions.get('window')
@@ -45,7 +46,7 @@ const ProductContainer = () => {
                 <Item>
                     <Icon name="ios-search" />
                     <Input 
-                        placeholder="Search"
+                        placeholder="Seaddrch"
                         onFocus={openList}
                         onChangeText={(text)=> searchProduct(text)}
                     />
@@ -58,15 +59,20 @@ const ProductContainer = () => {
                 <SearchedProduct productsFiltered={productsFiltered} />
             ):(
                 <View style={styles.container}>
-                    <FlatList 
-                        horizontal
-                        data={products}
-                        renderItem={({item})=> <ProductList 
-                                                key={item.id}
-                                                item={item}
-                                                keyExtractor={item.name}/>}
-                        keyExtractor={item => item.name}
-                    />
+                    <View>
+                        <Banner></Banner>
+                    </View>
+                    <View style={styles.listContainer}>
+                        <FlatList 
+                            horizontal
+                            data={products}
+                            renderItem={({item})=> <ProductList 
+                                                    key={item.id}
+                                                    item={item}
+                                                    keyExtractor={item.name}/>}
+                            keyExtractor={item => item.name}
+                        />
+                    </View>
                 </View>
             )}
         </Container>
