@@ -46,7 +46,7 @@ export default function Main() {
                                 color={color}
                                 size={30}
                                 />
-                            <CartIcon />
+                            <CardIcon />
                         </View>
                     )
                 }}

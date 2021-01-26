@@ -7,10 +7,10 @@ import {connect} from 'react-redux'
 function CardIcon(props) {
     return (
         <>
-            {props.cardsItems.length ? (
+            {props.cartItems.length ? (
                 <Badge style={styles.badge}>
                     <Text style={styles.text}>
-                        {props.cardsItems.length}
+                        {props.cartItems.length}
                     </Text>
                 </Badge>
             ): null}
@@ -19,9 +19,9 @@ function CardIcon(props) {
 };
 
 const mapStateToProps = (state) => {
-    const {cardsItems} = state;
+    const {cartItems} = state;
     return {
-        cardsItems : cardsItems
+        cartItems : cartItems
     }
 }
 
