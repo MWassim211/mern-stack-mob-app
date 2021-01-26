@@ -1,6 +1,6 @@
 import React , {useState, useEffect} from 'react'
-import { View, Text, Dimensions, ScrollView, StyleSheet } from 'react-native'
-import {Swiper} from 'react-native-swiper'
+import { View, Dimensions, ScrollView, StyleSheet, Image } from 'react-native'
+import Swiper from 'react-native-swiper/src'
 
 var {width} = Dimensions.get('window')
 
@@ -45,8 +45,8 @@ export default function Banner() {
                 </View>
             </View>
         </ScrollView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -63,6 +63,5 @@ const styles = StyleSheet.create({
         width : width - 40,
         borderRadius : 10,
         marginHorizontal : 20
-
     }
 })

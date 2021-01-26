@@ -1,27 +1,41 @@
 import React, {useState, useEffect} from 'react'
-import {View , StyleSheet, ActivityIndicator , FlatList, Dimensions} from 'react-native'
+import {View , StyleSheet, ActivityIndicator , FlatList, Dimensions, ScrollView} from 'react-native'
 import { Container, Text , Header, Icon , Item, Input} from 'native-base';
 import ProductList from './ProductList'
 import SearchedProduct from './SearchedProduct'
-import Banner from '../../Shared/Banner'
+import CategoryFilter from './CategoryFilter'
+import Banner from "../../Shared/Banner";
 
 const data = require('../../assets/data/products.json')
+const productsCategories = require('../../assets/data/categories.json')
 var { height } = Dimensions.get('window')
 
-const ProductContainer = () => {
+const ProductContainer = (props) => {
 
     const [products, setProducts] = useState([])
     const [productsFiltered,setproductsFiltered] = useState([])
-    const [focus, setFocus] = useState(false)
+    const [focus, setFocus] = useState()
+    const [categories, setCategories] = useState([])
+    const [active,  setActive] = useState()
+    const [initialState, setinitialState] = useState([])
+    const [productsCtg, setproductsCtg] = useState([])
 
     useEffect(()=>{
         setProducts(data)
         setproductsFiltered(data)
+        setFocus(false)
+        setCategories(productsCategories)
+        setActive(-1)
+        setinitialState(data)
+        setproductsCtg(data)
 
         return ()=>{
             setProducts([])
             setproductsFiltered([])
             setFocus(false)
+            setCategories([])
+            setActive()
+            setinitialState([])
         }
     },[])
 
@@ -33,12 +47,25 @@ const ProductContainer = () => {
 
     const openList = () => {
         setFocus(true)
-        console.log('ok')
     }
 
     const onBlur = () => {
         setFocus(false)
     }
+
+    // Categories
+    const changeCtg = (ctg) => {
+      {
+        ctg === "all"
+          ? [setproductsCtg(initialState), setActive(true)]
+          : [
+                setActive(true),
+                setproductsCtg(
+                    products.filter((i) =>  i.category._id === ctg)
+                ),
+            ];
+      }
+    };
 
     return (
         <Container>
@@ -46,7 +73,7 @@ const ProductContainer = () => {
                 <Item>
                     <Icon name="ios-search" />
                     <Input 
-                        placeholder="Seaddrch"
+                        placeholder="Search"
                         onFocus={openList}
                         onChangeText={(text)=> searchProduct(text)}
                     />
@@ -56,24 +83,48 @@ const ProductContainer = () => {
                 </Item>
             </Header>
             {focus == true ? (
-                <SearchedProduct productsFiltered={productsFiltered} />
+                console.log(productsFiltered.length),
+                <SearchedProduct 
+                    productsFiltered={productsFiltered}
+                    navigation={props.navigation}
+                />
             ):(
-                <View style={styles.container}>
-                    <View>
-                        <Banner></Banner>
+                <ScrollView> 
+                    <View style={styles.container}>
+                        <View>
+                            <Banner />
+                            <Text>{categories.length} yes</Text>
+                        </View>
+                        <View>
+                            <CategoryFilter 
+                                categories={categories}
+                                categoryFilter={changeCtg}
+                                productsCtg={productsCtg}
+                                active={active}
+                                setActive={setActive}
+                            />
+                        </View>
                     </View>
                     <View style={styles.listContainer}>
-                        <FlatList 
-                            horizontal
-                            data={products}
-                            renderItem={({item})=> <ProductList 
-                                                    key={item.id}
-                                                    item={item}
-                                                    keyExtractor={item.name}/>}
-                            keyExtractor={item => item.name}
-                        />
+                        {productsCtg.length > 0 ? (
+                           <View style={styles.listContainer}>
+                               {productsCtg.map((item)=>{
+                                   return (
+                                       <ProductList 
+                                            navigation={props.navigation}
+                                            key={item.name}
+                                            item={item}
+                                       />
+                                   )
+                               })}
+                           </View>
+                        ): (
+                            <View style={[styles.center, {height: "40%"}]}>
+                                <Text>No products found</Text>
+                            </View>
+                        )}
                     </View>
-                </View>
+                </ScrollView>
             )}
         </Container>
     )
@@ -85,7 +136,7 @@ const styles = StyleSheet.create({
       backgroundColor: "gainsboro",
     },
     listContainer: {
-      height: height,
+      width: "100%",
       flex: 1,
       flexDirection: "row",
       alignItems: "flex-start",
