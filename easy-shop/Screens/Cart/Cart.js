@@ -1,6 +1,7 @@
 import React from 'react'
 import { View,   Dimensions, StyleSheet } from 'react-native'
 import {Container, Text, Left,Right,ListItem,Thumbnail,Body, H1, Button} from 'native-base'
+import * as actions from '../../Redux/Actions/cartActions'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import {connect} from 'react-redux'
@@ -14,7 +15,7 @@ function Cart(props) {
     props.cartItems.forEach((cart)=>{
         return total += cart.product.price
     })
-    
+
     return (
         <>
         {props.cartItems.length ? (
@@ -41,7 +42,6 @@ function Cart(props) {
                                     <Text>$ {data.product.price}</Text>
                                 </Right>
                             </Body>
-                            
                         </ListItem>
                     )
                 })}
@@ -50,11 +50,15 @@ function Cart(props) {
                         <Text>$ {total}</Text>
                     </Left>
                     <Right >
-                        <Button title="Clear" />
+                        <Button title="Clear" 
+                        onPress={() => {
+                            props.clearCart()
+                        }}
+                        />
                     </Right>
-                    {/* <Right >
+                    <Right >
                         <Button title="Checkout" onPress={() => props.navigation.navigate('Checkout')}></Button>
-                    </Right> */}
+                    </Right>
                 </View>
             </Container>
         ) : (
@@ -71,6 +75,12 @@ const mapStateToProps = (state) => {
     const {cartItems} = state;
     return {
         cartItems: cartItems
+    }
+}
+
+const mapDispatchToProps = (dispatch)=>{
+    return {
+        clearCart : () => dispatch(actions.clearCart())
     }
 }
 
@@ -105,4 +115,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default connect(mapStateToProps,null)(Cart)
+export default connect(mapStateToProps,mapDispatchToProps)(Cart)
