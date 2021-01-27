@@ -5,6 +5,7 @@ import { Text, Left, Right, ListItem, Body, thumbnail } from 'native-base'
 export default function CartItem(props) {
     const data = props.item.item.product
     const [quantity, setquantity] = useState(props.item.item.quantity)
+    // isue with CartItem to fix
 
     return (
         <ListItem
