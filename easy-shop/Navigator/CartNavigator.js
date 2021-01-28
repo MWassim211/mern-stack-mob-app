@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack"
 
 const Stack = createStackNavigator()
 import Cart from '../Screens/Cart/Cart';
+// issue with screen
 
 
 function MyStack() {
